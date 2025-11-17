@@ -20,6 +20,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+/**
+ * Lightweight Metrics implementation adapted from bStats (https://bStats.org).
+ * This class submits anonymous usage statistics so the plugin can appear on the bStats dashboard.
+ */
 public class Metrics {
 
     private static final String METRICS_VERSION = "3.0";
@@ -57,6 +61,7 @@ public class Metrics {
         File configFile = new File(bStatsFolder, "config.yml");
 
         if (!bStatsFolder.exists()) {
+            // noinspection ResultOfMethodCallIgnored
             bStatsFolder.mkdirs();
         }
 
@@ -79,6 +84,7 @@ public class Metrics {
     }
 
     private void startSubmitting() {
+        // Schedule using Bukkit's async scheduler.
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::submitData, INITIAL_DELAY_TICKS, INTERVAL_TICKS);
     }
 
