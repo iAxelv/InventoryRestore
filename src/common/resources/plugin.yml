@@ -2,7 +2,7 @@ name: InventoryRestore
 version: '${version}'
 main: com.foxy.inventoryRestore.InventoryRestore
 api-version: '1.21'
-author: Foxy_Leov
+author: iAx3lv
 commands:
   invrestore:
     description: Manage stored inventories.
