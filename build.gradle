@@ -1,0 +1,100 @@
+plugins {
+    id 'java'
+    id("xyz.jpenilla.run-paper") version "2.3.1"
+}
+
+group = 'com.foxy'
+version = '1.2'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "papermc-repo"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/common/java']
+        resources.srcDirs = ['src/common/resources']
+    }
+
+    v1_21 {
+        java.srcDirs = ['src/versions/1_21/java']
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+
+    v26_1 {
+        java.srcDirs = ['src/versions/26_1/java']
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+
+    v26_2 {
+        java.srcDirs = ['src/versions/26_2/java']
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+
+    v26_3 {
+        java.srcDirs = ['src/versions/26_3/java']
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+dependencies {
+    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    v1_21CompileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    v26_1CompileOnly("io.papermc.paper:paper-api:26.1.2.build.74-stable")
+    v26_2CompileOnly("io.papermc.paper:paper-api:26.2.build.135-stable")
+    v26_3CompileOnly("io.papermc.paper:paper-api:26.3.build.244-stable")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release.set(21)
+}
+
+['v26_1', 'v26_2', 'v26_3'].each { sourceSetName ->
+    def compileTaskName = sourceSets.getByName(sourceSetName).compileJavaTaskName
+    tasks.named(compileTaskName, JavaCompile).configure {
+        javaCompiler = javaToolchains.compilerFor {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+        options.release.set(25)
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+tasks.named('jar', Jar) {
+    from sourceSets.v1_21.output
+    from sourceSets.v26_1.output
+    from sourceSets.v26_2.output
+    from sourceSets.v26_3.output
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+}
+
+tasks {
+    runServer {
+        minecraftVersion("26.2")
+        javaLauncher = javaToolchains.launcherFor {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+    }
+}

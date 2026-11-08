@@ -1,0 +1,20 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+build/
+
+# Minecraft local server
+run/
+logs/
+eula.txt
+server.properties
+crash-reports/
+/bin/
+/.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
