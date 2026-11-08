@@ -62,6 +62,12 @@ All commands are under `/invrestore`:
 | `messages/es.yml` | Spanish message set. |
 | `database.db` | Stores all serialized inventories. |
 
+## Version compatibility
+
+The project builds one universal JAR for Paper 1.21.x, 26.1.x, 26.2.x, and 26.3.x. Shared plugin code lives in `src/common`; version-specific code belongs in `src/versions/1_21`, `src/versions/26_1`, `src/versions/26_2`, or `src/versions/26_3`. The plugin loads only the adapter for the server's version, so classes compiled against newer Paper APIs are not loaded on older servers.
+
+The plugin descriptor keeps `api-version: '1.21'` so Paper 1.21 servers can load the same JAR. Build the JAR with `.\gradlew.bat build` using JDK 25; the 26.x Paper APIs require the Java 25 compiler. The resulting JAR is written to `build/libs/`.
+
 ---
 
 ## 🕹️ Usage Flow
